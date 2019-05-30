@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% set active_page = 'fee' %}
+{% block head %} {% endblock %}
+{% block style %} {% endblock %}
+
+{% block body %}
+        <section class="jumbotron">
+            <h1 class="display-6" style="text-align: center;">队费查询</h1>
+            <form class="form-inline my-2 my-lg-0" action="javascript:get_feeList($('#playerList').val());">
+                <div class="form-group">
+                    <select class="custom-select form-control mr-2" style="max-width: 50%;" id="playerList">
+                        <option selected="" value="">请选择球员</option>
+                        <!--<option value="陈譞">陈譞</option>-->
+                    </select>
+
+                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                </div>
+            </form>
+
+            <hr class="my-4">
+
+            <table class="table table-info" id="total">
+                <tbody>
+                    <tr>
+                        <th scope="row" id="total_name">球员</th>
+                        <td>结余：<span class="" id="total_amount"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-hover" id="feeTable">
+                <thead>
+                    <tr>
+                        <th scope="col">日期</th>
+                        <th scope="col">场地</th>
+                        <th scope="col">费用</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--<tr class="table-dark">
+                        <td>Column content</td>
+                        <td>Column content</td>
+                        <td>Column content</td>
+                    </tr>-->
+                </tbody>
+            </table>
+        </section>
+
+{% endblock %}
+
+{% block jscript %}
+
+<script language="JavaScript" type="application/javascript">
+
+$(function(){
+    $.ajax({
+        url: "/api/get_name_num_list",
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            var res_str = '';
+            for (var i in data) {
+                res_str = res_str + '<option value="' + data[i].name + '">' + data[i].num + '. ' + data[i].name + '</option>'
+            }
+            $('#playerList').append(res_str);
+        },
+        error: function (response, status, error) {
+            console.log('Error: ' + error + ". Status: " + status);
+        },
+        async: false
+	});
+});
+
+//get a player details
+function get_feeList(name) {
+    if ( name && name != '') {
+        $.ajax({
+            url: "/api/get_feeList_by_name?n=" + name,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                var total = 0;
+                var res_str = '';
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].amount >= 0) {
+                        res_str = res_str + '<tr class="table-success"><td>' + data[i].date + '</td><td>' + data[i].loc + '</td><td>' + data[i].amount + '</td></tr>'
+                    } else {
+                        res_str = res_str + '<tr class="table-warning"><td>' + data[i].date + '</td><td>' + data[i].loc + '</td><td>' + data[i].amount + '</td></tr>'
+                    }
+                    total = total + data[i].amount;
+                }
+                $('#total_name').html(data[0].name);
+                $('#total_amount').html(total);
+                $('#total').removeClass('table-info').removeClass('table-danger')
+                if (total >= 0) {
+                    $('#total').addClass('table-info');
+                }
+                if (total < 0) {
+                    $('#total').addClass('table-danger');
+                }
+                $('#feeTable').find('tbody').html(res_str);
+            },
+            error: function (response, status, error) {
+                console.log('Error: ' + error + ". Status: " + status);
+            },
+            async: false
+        });
+    }
+}
+
+</script>
+{% endblock %}

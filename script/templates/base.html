@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>绿动北京足球俱乐部</title>
+    <meta name="author" content="cx9">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <![endif]-->
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="apple-touch-icon-precomposed" href="{{ url_for('static',filename='img/favicon.ico') }}">
+    <!-- Bootstrap CSS (bootswatch) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.1/spacelab/bootstrap.min.css" rel="stylesheet" integrity="sha384-TgQmpeh1IG9vQ1WxIzpdfm5FX08N4+Nr5uzpgqvZAKQwWems+NIMmOVIMFxGq6EZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/base.css') }}">
+    {% block head %} {% endblock %}
+    {% block style %} {% endblock %}
+
+</head>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">绿动北京足球俱乐部</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+        {% set active_page = active_page|default('index') -%}
+
+      <div class="collapse navbar-collapse" id="navbarColor03">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link {%if active_page == 'index' %}active{% endif %}" href="/">首页</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {%if active_page == 'player' or active_page == 'fee' or active_page == 'attend' %}active{% endif %}" data-toggle="dropdown" href="#">绿动球员</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item {%if active_page == 'player' %}active{% endif %}" href="/player">球员资料</a>
+                    <a class="dropdown-item {%if active_page == 'fee' %}active{% endif %}" href="/fee">队费查询</a>
+                    <a class="dropdown-item {%if active_page == 'attend' %}active{% endif %}" href="/attend">出勤统计</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://i.youku.com/i/UMjg4MDczMjQ4/videos?spm=a2hzp.8253876.0.0" target="_blank">精彩视频</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {%if active_page == 'about' %}active{% endif %}" href="/about">球队章程</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {%if active_page == 'addplayer' or active_page == 'editplayer' or active_page == 'editfee' %}active{% endif %}" data-toggle="dropdown" href="#">管理员功能</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item {%if active_page == 'addplayer' %}active{% endif %}" href="/addplayer">新增球员</a>
+                    <a class="dropdown-item {%if active_page == 'editplayer' %}active{% endif %}" href="/editplayer">修改球员</a>
+                    <a class="dropdown-item {%if active_page == 'editfee' %}active{% endif %}" href="/editfee">更新队费</a>
+
+                    {% if current_user.username == 'admin' %}
+
+                    <a class="dropdown-item" href="/auth/logout">退出登录</a>
+
+                    {% endif %}
+
+                </div>
+            </li>
+        </ul>
+      </div>
+    </nav>
+
+<main>
+
+    {% block body %} {% endblock %}
+
+</main>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    {% block jscript %} {% endblock %}
+</body>
+</html>

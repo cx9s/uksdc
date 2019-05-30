@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% set active_page = 'index' %}
+{% block head %} {% endblock %}
+{% block style %} {% endblock %}
+
+{% block body %}
+    <section class="jumbotron">
+        <h1 class="display-6 index">绿动是冠军！</h1>
+        <hr class="my-4">
+        <p class="lead">
+            <img src="{{ url_for('static', filename='../static/img/champion-sm.jpg') }}" width="100%" height="auto" alt="我们的球队是 绿动！">
+        </p>
+    </section>
+{% endblock %}
+
+{% block jscript %} {% endblock %}

@@ -1,1 +1,3 @@
-# uksdc
+# UK Stamp Duty Calculator
+
+#init

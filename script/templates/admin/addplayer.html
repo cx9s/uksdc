@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% set active_page = 'addplayer' %}
+{% block head %} {% endblock %}
+{% block style %} {% endblock %}
+
+{% block body %}
+
+        <section class="jumbotron">
+            <h1 class="display-6" style="text-align: center;">新增球员</h1>
+            {% with success = get_flashed_messages(category_filter=['success']) %}
+                {% if success %}
+                    <div class="alert alert-success">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        {{ success[0] }}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <hr class="my-4">
+
+            <form method="post" action="api/add_player">
+                <fieldset>
+                    <legend>球员信息</legend>
+                    <div class="form-group">
+                        <label class="col-form-label" for="name">球员姓名</label>
+                        <input type="text" class="form-control" required placeholder="" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label" for="num">球衣号码（号码为"0"将球员下放到预备队，例"奥托"。号码大于"0"则显示在球员资料及队费页。）</label>
+                        <input type="number" class="form-control" required placeholder="" min="0" id="num" name="num">
+                        <p class="text-danger" id="checkText">请输入球员号码。</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label" for="playerList">查看现有球员号码</label>
+                        <select class="custom-select form-control mr-2" style="max-width: 50%;" id="playerList" name="playerList">
+                            <option selected="" value="">查看</option>
+                            <!--<option value="陈譞">陈譞</option>-->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="position">场上位置</label>
+                        <select multiple class="form-control" required id="position" name="position">
+                            <option value="GK">守门员</option>
+                            <option value="CB">中后卫</option>
+                            <option value="SB">边后卫</option>
+                            <option value="LB">左后卫</option>
+                            <option value="RB">右后卫</option>
+                            <option value="SMF">边前卫</option>
+                            <option value="LMF">左边前卫</option>
+                            <option value="RMF">右边前卫</option>
+                            <option value="DMF">后腰</option>
+                            <option value="CMF">中场</option>
+                            <option value="OMF">前腰</option>
+                            <option value="AMF">进攻型前卫</option>
+                            <option value="FW">前锋</option>
+                            <option value="WF">边锋</option>
+                            <option value="LWF">左边锋</option>
+                            <option value="RWF">右边锋</option>
+                            <option value="CF">中锋</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label" for="dob">生日</label>
+                        <input type="date" class="form-control" required placeholder="" min="1960-01-01" max="2000-12-31" id="dob" name="dob">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label" for="phone">手机号码</label>
+                        <input type="tel" class="form-control" required placeholder="" id="phone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" class="form-control" required id="email" name="email" aria-describedby="emailHelp" placeholder="">
+                        <small id="emailHelp" class="form-text text-muted">邮箱地址不会流出哦。</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label" for="addr">地址</label>
+                        <input type="text" class="form-control" required placeholder="" id="addr" name="addr">
+                    </div>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <button type="submit" class="btn btn-primary">确认</button>
+                </fieldset>
+            </form>
+
+
+        </section>
+
+{% endblock %}
+
+{% block jscript %}
+<script language="JavaScript" type="application/javascript">
+
+$(function(){
+    $.ajax({
+        url: "/api/get_name_num_all_list",
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            var res_str = '';
+            for (var i in data) {
+                res_str = res_str + '<option value="' + data[i].name + '">' + data[i].num + '. ' + data[i].name + '</option>'
+            }
+            $('#playerList').append(res_str);
+        },
+        error: function (response, status, error) {
+            console.log('Error: ' + error + ". Status: " + status);
+        },
+        async: false
+	});
+});
+
+
+$('#num').on('input propertychange',function () {
+    num = $('#num').val();
+    if (num == '' || num == 'e'){
+        $('#checkText').text('请输入球员号码。');
+    }else if (num == 0){
+        $('#checkText').text('"0"可用，球员将下放到预备队。');
+    }else if(num > 0){
+        $.ajax({
+            url: "/api/check_num_exist?n="+num,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                if(data.valid){
+                    $('#checkText').text('该号码可用。');
+                }
+                else{
+                    $('#checkText').text('该号码已被占用。点击下面查看已有号码。');
+                }
+            },
+            error: function (response, status, error) {
+                console.log('Error: ' + error + ". Status: " + status);
+            },
+            async: false
+        });
+    }
+
+});
+
+</script>
+{% endblock %}

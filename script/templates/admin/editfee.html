@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% set active_page = 'editfee' %}
+{% block head %} {% endblock %}
+{% block style %} {% endblock %}
+
+{% block body %}
+
+        <section class="jumbotron">
+            <h1 class="display-6" style="text-align: center;">更新球队费用</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, msg in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <hr class="my-4">
+
+            <form method="post" action="api/edit_fee">
+                <fieldset>
+                    <legend>活动扣款/征收队费</legend>
+                    <div class="form-group">
+                        <label class="col-form-label" for="date">活动日期</label>
+                        <input type="date" class="form-control" required placeholder="" min="0" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label" for="loc">活动地点</label>
+                        <input type="text" class="form-control" required placeholder="" id="loc" name="loc">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label" for="totalAmount">总金额</label>
+                        <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">￥</span>
+                        </div>
+                        <input type="number" class="form-control" required placeholder="" step="1" id="totalAmount" name="totalAmount">
+                        <div class="input-group-append">
+                            <span class="input-group-text">.00</span>
+                        </div>
+                        </div>
+                        <p class="text-danger">扣款填复数（-），充值填正数（+）。</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">选择球员</label>
+
+                        <div class="form-group">
+                            <select class="custom-select form-control mr-2" size="5" required style="max-width: 50%;" id="playerList" name="playerList" multiple>
+                                <!--<option value="陈譞">陈譞</option>-->
+                            </select>
+                        <p class="text-danger">可多选，所选队员将平分"总金额"。</p>
+                        </div>
+
+                    </div>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <button type="botton" class="btn btn-primary">确认</button>
+                </fieldset>
+            </form>
+
+
+        </section>
+
+    {% endblock %}
+
+{% block jscript %}
+<script language="JavaScript" type="application/javascript">
+
+$(function(){
+    $.ajax({
+        url: "/api/get_name_num_list",
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            var res_str = '';
+            for (var i in data) {
+                res_str = res_str + '<option value="' + data[i].name + '">' + data[i].num + '. ' + data[i].name + '</option>'
+            }
+            $('#playerList').append(res_str);
+        },
+        error: function (response, status, error) {
+            console.log('Error: ' + error + ". Status: " + status);
+        },
+        async: false
+	});
+
+
+    //set #date to today
+    var now = new Date();
+    var month = (now.getMonth() + 1);
+    var day = now.getDate();
+    if (month < 10)
+        month = "0" + month;
+    if (day < 10)
+        day = "0" + day;
+    var today = now.getFullYear() + '-' + month + '-' + day;
+    $('#date').val(today);
+
+});
+
+</script>
+{% endblock %}
