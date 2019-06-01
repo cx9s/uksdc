@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Project Name
-PROJECT_NAME = '伦敦房产印花税计算器'
+PROJECT_NAME = '英国房产印花税计算器'
 
 # Determine system whether start with debug mode
 DEBUG = True
 
 # Cookie security key
 #SECRET_KEY = 'AIzaSyAlpjgnmPOM99xvTK_KzGCvVWLMXC_MaA0'
-SECRET_KEY = 'ldfcyhsjsq'
+SECRET_KEY = 'ygfcyhsjsq'
 
 # Use google cloud or not
 SQLALCHEMY_DATABASE_URI = 'sqlite:///projdb.sqlite'
