@@ -1,6 +1,10 @@
 html {background-color: #eee;}
 
-.navbar-brand {background: url(../img/ldLogo.png) 0 0 no-repeat; background-size: contain; -moz-background-size: contain; -o-background-size: contain;
-    -webkit-background-size: contain; padding-left: 36px;}
+.navbar-brand {background: url(../img/logo.png) 0 0 no-repeat; background-size: contain; -moz-background-size: contain; -o-background-size: contain;
+    -webkit-background-size: contain; padding-left: 60px;}
 
 h1.index { text-align: center; color: #0d823b;}
+
+.result { display: none; margin-top: 20px; text-align: center;}
+
+.adv { margin-top: 30px; text-align: center;}

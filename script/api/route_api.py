@@ -8,7 +8,7 @@ from script.models.mail import sendMail
 from bson.son import SON
 from flask_login import current_user
 
-
+'''
 # restful api
 #define @requires_auth for api
 def check_auth(username, password):
@@ -410,3 +410,4 @@ def attend():
     for item in res_list:
         item['percent'] = format(round(item['total']/len(total), 3), '.0%')
     return jsonify(res_list)
+'''

@@ -5,12 +5,115 @@
 
 {% block body %}
     <section class="jumbotron">
-        <h1 class="display-6 index">绿动是冠军！</h1>
-        <hr class="my-4">
-        <p class="lead">
-            <img src="{{ url_for('static', filename='../static/img/champion-sm.jpg') }}" width="100%" height="auto" alt="我们的球队是 绿动！">
-        </p>
+        <form method="get" action="javascript:calc();">
+            <fieldset>
+                <div class="form-group">
+                    <h5>房产交易价格：</h5>
+                    <input type="currency" class="form-control" required placeholder="" id="price" name="price">
+                </div>
+                <div class="form-group">
+                    <input type="radio" name="rent" value="true" checked>出租购房或第二套房产<br>
+                    <input type="radio" name="rent" value="false">首套房产<br>
+                </div>
+
+                <button type="submit" class="btn btn-primary">计算印花税</button>
+            </fieldset>
+        </form>
+        <div class="alert alert-success result" id="result">
+
+        </div>
+        <div class="adv">
+            <img src="static/img/adv.jpg" width="100%" height="160px" >
+        </div>
     </section>
 {% endblock %}
 
-{% block jscript %} {% endblock %}
+{% block jscript %}
+<script language="JavaScript" type="application/javascript">
+
+    var currencyInput = document.querySelector('input[type="currency"]');
+    var currency = 'GBP'; // https://www.currency-iso.org/dam/downloads/lists/list_one.xml
+
+    currencyInput.addEventListener('focus', onFocus);
+    currencyInput.addEventListener('blur', onBlur);
+
+    function localStringToNumber( s ){
+        return Number(String(s).replace(/[^0-9.-]+/g,""));
+    }
+
+    function onFocus(e){
+      var value = e.target.value;
+      e.target.value = value ? localStringToNumber(value) : '';
+    }
+
+    const options = {
+        maximumFractionDigits : 2,
+        currency              : currency,
+        style                 : "currency",
+        currencyDisplay       : "symbol"
+    }
+
+    function onBlur(e){
+      var value = e.target.value;
+
+      e.target.value = value
+        ? localStringToNumber(value).toLocaleString(undefined, options)
+        : ''
+    }
+
+    function calc(){
+        var price = localStringToNumber($('#price').val());
+        var rent = $('input[name="rent"]:checked').val() === 'true' ? true : false;
+        if (rent) {
+            highLevel(price);
+        } else {
+            lowLevel(price);
+        }
+    }
+
+    function highLevel(price) {
+        var fee = 0 , level1 = 40000, level2 = 125000, level3 = 250000, level4 = 925000, level5 = 1500000;
+
+        if (price <= level1) {
+            fee = 0;
+        } else if ( price <= level2) {
+            fee = price * 0.03;
+        } else if ( price <= level3) {
+            fee = level2 * 0.03 + (price - level2) * 0.05;
+        } else if ( price <= level4) {
+            fee = level2 * 0.03 + (level3 - level2) * 0.05 + (price - level3) * 0.08;
+        } else if ( price <= level5) {
+            fee = level2 * 0.03 + (level3 - level2) * 0.05 + (level4 - level3) * 0.08 + (price - level4) * 0.13;
+        } else {
+            fee = level2 * 0.03 + (level3 - level2) * 0.05 + (level4 - level3) * 0.08 + (level5 - level4) * 0.13+ (price - level5) * 0.15;
+        }
+
+        print(price, fee);
+    }
+
+    function lowLevel(price){
+        var fee = 0 , level1 = 125000, level2 = 250000, level3 = 925000, level4 = 1500000;
+
+        if (price <= level1) {
+            fee = 0;
+        } else if ( price <= level2) {
+            fee = (price - level1) * 0.02;
+        } else if ( price <= level3) {
+            fee = (level2 - level1) * 0.02 + (price - level2) * 0.05;
+        } else if ( price <= level4) {
+            fee = (level2 - level1) * 0.02 + (level3 - level2) * 0.05 + (price - level3) * 0.1;
+        } else {
+            fee = (level2 - level1) * 0.02 + (level3 - level2) * 0.05 + (level4 - level3) * 0.1 + (price - level4) * 0.12;
+        }
+
+        print(price, fee);
+    }
+    
+    function print(price, fee) {
+        var rate = Math.round((fee/price)*1000)/10 + '%';
+
+        $('#result').html('需支付印花税：' + localStringToNumber(fee).toLocaleString(undefined, options) + '<br/> 税率为：' + rate).css('display','block');
+    }
+
+</script>
+{% endblock %}

@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 # Project Name
-PROJECT_NAME = '绿动北京足球俱乐部'
+PROJECT_NAME = '伦敦房产印花税计算器'
 
 # Determine system whether start with debug mode
 DEBUG = True
 
 # Cookie security key
 #SECRET_KEY = 'AIzaSyAlpjgnmPOM99xvTK_KzGCvVWLMXC_MaA0'
-SECRET_KEY = 'lvdongshiguanjun'
+SECRET_KEY = 'ldfcyhsjsq'
 
 # Use google cloud or not
 SQLALCHEMY_DATABASE_URI = 'sqlite:///projdb.sqlite'
 PAGESIZE = 50
 
 # $heroku config:get MONGODB_URI
-MONGODB_URI = 'mongodb://heroku_m90g1d47:jc639222qm88pkui341ek34ser@ds147190.mlab.com:47190/heroku_m90g1d47'
+MONGODB_URI = ''
 
 SECONDS = 900
 

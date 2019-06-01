@@ -7,6 +7,7 @@ from flask_login import login_required, current_user
 def index():
     return render_template('index.html')
 
+'''
 @main.route('/player')
 def player():
     return render_template('player.html')
@@ -41,6 +42,7 @@ def editplayer():
 @login_required
 def editfee():
     return render_template('admin/editfee.html')
+'''
 
 @main.route('/ping')
 def ping():
