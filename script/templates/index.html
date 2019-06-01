@@ -34,6 +34,13 @@
     var currencyInput = document.querySelector('input[type="currency"]');
     var currency = 'GBP'; // https://www.currency-iso.org/dam/downloads/lists/list_one.xml
 
+    const options = {
+        maximumFractionDigits : 2,
+        currency              : currency,
+        style                 : "currency",
+        currencyDisplay       : "symbol"
+    }
+
     currencyInput.addEventListener('focus', onFocus);
     currencyInput.addEventListener('blur', onBlur);
 
@@ -42,18 +49,13 @@
     }
 
     function onFocus(e){
+        e.pattern = "[0-9]*";
       var value = e.target.value;
       e.target.value = value ? localStringToNumber(value) : '';
     }
 
-    const options = {
-        maximumFractionDigits : 2,
-        currency              : currency,
-        style                 : "currency",
-        currencyDisplay       : "symbol"
-    }
-
     function onBlur(e){
+        e.pattern = "";
       var value = e.target.value;
 
       e.target.value = value
