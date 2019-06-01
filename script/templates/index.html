@@ -49,13 +49,11 @@
     }
 
     function onFocus(e){
-        e.type = "number";
       var value = e.target.value;
       e.target.value = value ? localStringToNumber(value) : '';
     }
 
     function onBlur(e){
-        e.type = "currency";
       var value = e.target.value;
 
       e.target.value = value
